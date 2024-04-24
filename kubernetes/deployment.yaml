@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: superchat
+  labels:
+    app: superchat
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: superchat
+  template:
+    metadata:
+      labels:
+        app: superchat
+    spec:
+      containers:
+        - name: superchat
+          image: yasaihero/react-app:dev
+          ports:
+            - containerPort: 3000
