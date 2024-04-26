@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: react-app-container
-        image: your-registry/react-app:baseline
+        image: yasaihero/react-app:dev
         ports:
         - containerPort: 3000
         readinessProbe:
