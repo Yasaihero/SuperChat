@@ -10,21 +10,10 @@ spec:
   - name: passPercentage
     description: Pass percentage for the canary analysis
     default: "99"
-  - name: payloadImage
-    description: Payload image to use for the canary analysis
   - name: baseline
     description: Baseline version of the application
   - name: canary
     description: Canary version of the application
-  metrics:
-  - name: latency
-    interval: 10s
-    http:
-      url: http://react-app-service.default.svc.cluster.local:80/metrics
-      method: GET
-      threshold: 1000
-      count: 10
-      interval: 1s
   templates:
   - name: sleep
     successCondition: "true"
