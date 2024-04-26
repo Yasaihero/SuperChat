@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: react-app-rollout
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: react-app
+  template:
+    metadata:
+      labels:
+        app: react-app
+    spec:
+      containers:
+      - name: react-app-container
+        image: your-registry/react-app:baseline
+        ports:
+        - containerPort: 3000
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+  strategy:
+    canary:
+      analysis:
+        templates:
+        - name: react-app-analysis
+      steps:
+      - setWeight: 20
+        pause:
+          duration: 10s
+      - setWeight: 40
+        pause:
+          duration: 10s
+      - setWeight: 60
+        pause:
+          duration: 10s
+      - setWeight: 80
+        pause:
+          duration: 10s
+      - setWeight: 100

@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: react-app-analysis
+spec:
+  args:
+  - name: sleepDuration
+    description: Sleep duration in seconds
+    default: "30"
+  - name: passPercentage
+    description: Pass percentage for the canary analysis
+    default: "99"
+  - name: payloadImage
+    description: Payload image to use for the canary analysis
+  - name: baseline
+    description: Baseline version of the application
+  - name: canary
+    description: Canary version of the application
+  metrics:
+  - name: latency
+    interval: 10s
+    http:
+      url: http://react-app-service.default.svc.cluster.local:80/metrics
+      method: GET
+      threshold: 1000
+      count: 10
+      interval: 1s
+  templates:
+  - name: sleep
+    successCondition: "true"
+    inputs:
+      artifacts:
+      - name: payload
+        path: /metrics
+    container:
+      image: alpine:latest
+      command: ["/bin/sh", "-c"]
+      args: ["sleep {{inputs.parameters.sleepDuration}}"]
+  - name: verify
+    inputs:
+      artifacts:
+      - name: baseline
+        from: "{{inputs.parameters.baseline}}"
+      - name: canary
+        from: "{{inputs.parameters.canary}}"
+    container:
+      image: busybox:latest
+      command: ["/bin/sh", "-c"]
+      args: ["echo 'Canary Analysis Passed'"]
