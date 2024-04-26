@@ -33,6 +33,6 @@ spec:
       - name: canary
         from: "{{inputs.parameters.canary}}"
     container:
-      image: busybox:latest
+      image: yasaihero/react-app:dev
       command: ["/bin/sh", "-c"]
       args: ["echo 'Canary Analysis Passed'"]
